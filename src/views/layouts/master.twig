@@ -120,9 +120,7 @@
         window.header_is_sticky = "{{theme.settings.get('header_is_sticky', 'Default Value')}}"
         window.imageZoom = "{{theme.settings.get('imageZoom')}}"
     </script>
-
-    {% hook 'head:start' %}
-
+    {% hook head %}
     <script data-cfasync="false">
       window.salla = window.Salla = window.Salla || {};
       Salla.onReady =
