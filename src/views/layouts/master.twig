@@ -27,7 +27,7 @@
 | store.settings.rating_enabled                      | bool     | Is one of: store_enabled or shipping_enabled or products_enabled                                         |
 | store.settings.arabic_numbers_enabled              | bool     | Does the merchant wants the numbers to be shown as Arabic format                                         |
 | store.settings.is_multilingual                     | bool     |                                                                                                          |
-| store.settings.currencies_enabled                  | bool     |     
+| store.settings.currencies_enabled                  | bool     |
 | theme                                              | Theme    |                                                                                                          |
 | theme.id                                           | int      |                                                                                                          |
 | theme.name                                         | string   |                                                                                                          |
@@ -109,7 +109,7 @@
           });
       });
     </script>
-  
+
     <script defer data-cfasync="false" src="{{ 'product-card.js'|asset }}"></script>
     <script defer src="{{ 'main-menu.js'|asset }}"></script>
 
@@ -120,14 +120,34 @@
         window.header_is_sticky = "{{theme.settings.get('header_is_sticky', 'Default Value')}}"
         window.imageZoom = "{{theme.settings.get('imageZoom')}}"
     </script>
-    
+
     {% hook 'head:start' %}
-    {% hook head %}
+
+    <script data-cfasync="false">
+      window.salla = window.Salla = window.Salla || {};
+      Salla.onReady =
+        Salla.onReady ||
+        function (callback) {
+          return new Promise(function (resolve) {
+            return Salla.status == "ready"
+              ? resolve(callback ? callback(salla.config.all()) : salla.config.all())
+              : window.addEventListener(
+                  "twilight::initiated",
+                  function (config) {
+                    resolve(callback ? callback(config.detail) : config.detail);
+                  },
+                  { once: true },
+                );
+          });
+        };
+    </script>
+
+    <script async src="https://cdn.salla.network/js/twilight/tests/featurePACD-1219-mispay-installments-per-4-months/4f5c266bcc4a125a9f89c3c045a933fbb65066f8/twilight.js"></script>
+
     {% block styles %}{% endblock %}
     <link rel="stylesheet" href="{{ 'app.css' | asset }}">
     <link rel="stylesheet" href="{{ theme.font.path|cdn }}"/>
     <link rel="stylesheet" href="{{ 'fonts/sallaicons.css'|cdn }}"/>
-    
     <style>
         :root {
             --font-main: '{{theme.font.name}}';
